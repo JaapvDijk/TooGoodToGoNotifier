@@ -121,17 +121,18 @@ namespace TooGoodToGo.Api.Services
 
         public async Task SetFavoriteAsync(string accessToken, string basketId, bool isFavorite)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_apiOptions.BaseUrl}{_apiOptions.GetItemsEndpoint}{basketId}/setFavorite");
-            request.Headers.Add("Authorization", $"Bearer {accessToken}");
+            //RETURNS NOT FOUND
+            //var request = new HttpRequestMessage(HttpMethod.Post, $"{_apiOptions.BaseUrl}{_apiOptions.GetItemsEndpoint}{basketId}/setFavorite");
+            //request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-            var setBasketFavoriteStatusRequest = new SetBasketFavoriteStatusRequest
-            {
-                IsFavorite = isFavorite
-            };
+            //var setBasketFavoriteStatusRequest = new SetBasketFavoriteStatusRequest
+            //{
+            //    IsFavorite = isFavorite
+            //};
 
-            SerializeHttpRequestContentAsJson(request, setBasketFavoriteStatusRequest);
+            //SerializeHttpRequestContentAsJson(request, setBasketFavoriteStatusRequest);
 
-            await ExecuteAndThrowIfNotSuccessfulAsync(request);
+            //await ExecuteAndThrowIfNotSuccessfulAsync(request);
         }
 
         private async Task<T> ExecuteAndThrowIfNotSuccessfulAsync<T>(HttpRequestMessage httpRequestMessage)
