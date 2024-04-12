@@ -22,6 +22,7 @@ namespace TooGoodToGoNotifier
 
             app.Services.UseScheduler(scheduler =>
             {
+                //TODO: refactor to Hangfire
                 // Scheduling job to refresh access token
                 scheduler.Schedule<RefreshAccessTokenJob>()
                 .Cron(notifierOptions.RefreshAccessTokenCronExpression)

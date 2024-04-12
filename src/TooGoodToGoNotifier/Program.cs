@@ -47,6 +47,9 @@ namespace TooGoodToGoNotifier
             app.MapControllers();
             await app.AuthenticateToTooGoodToGoServices();
             app.ScheduleBackgroundJobs(); // Coravel jobs must be scheduled at startup, otherwise RunOnceAtStart() method won't work
+            app.UseCors(x => x.WithOrigins("http://localhost:3000") //TODO: production url
+               .AllowAnyMethod()
+               .AllowAnyHeader());
             app.Run();
         }
 
@@ -113,6 +116,17 @@ namespace TooGoodToGoNotifier
             })
             .AddPolicyHandler(GetWaitAndRetryForeverPolicy)
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(10));
+            
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(builder =>
+            //    {
+            //        //TODO: restrict further in production
+            //        builder.AllowAnyOrigin()
+            //        .AllowAnyMethod()
+            //        .AllowAnyHeader();
+            //    });
+            //});
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetWaitAndRetryForeverPolicy(IServiceProvider serviceProvider, HttpRequestMessage httpRequestMessage)

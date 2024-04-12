@@ -2,25 +2,21 @@ import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Api } from './apiClient/Api';
-import { Basket } from './apiClient/data-contracts';
+import { User } from './apiClient/data-contracts';
 
 
 function App() {
-    const [data, setData] = useState<Basket[] | null>(null); //Any?
+    const [data, setData] = useState<User[] | null>(null); //Any?
 
     useEffect(() => {
         const fetchData = async () => {
             const api = new Api({
-                baseUrl: "http://localhost:5000/api/v1",
+                baseUrl: "http://localhost:5000",
             });
 
-            try {
-                const res = await api.basketFavoriteList();
-                setData(res.data);
-                console.log(data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
+            const res = await api.userList();
+            setData(res.data);
+            console.log(data);
         };
 
         fetchData();
