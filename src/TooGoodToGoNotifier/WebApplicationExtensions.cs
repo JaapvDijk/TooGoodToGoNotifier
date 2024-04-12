@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Polly;
 using TooGoodToGo.Api.Interfaces;
 using TooGoodToGo.Api.Models.Responses;
 using TooGoodToGoNotifier.Core.Options;
@@ -55,30 +56,32 @@ namespace TooGoodToGoNotifier
                 app.Logger.LogInformation("Authenticating to TooGoodToGo's services");
 
                 ITooGoodToGoService tooGoodToGoService = app.Services.GetService<ITooGoodToGoService>();
-
                 AuthenticateByEmailResponse authenticateByEmailResponse = await tooGoodToGoService.AuthenticateByEmailAsync();
 
-                int pollingAttempts = 0;
-                AuthenticateByPollingIdResponse authenticateByPollingIdResponse;
-                while (true)
+                var polling = await Policy.HandleResult<AuthenticateByPollingIdResponse>(result => result == null)
+                                          .WaitAndRetryAsync(20, _ => TimeSpan.FromSeconds(15), onRetry: (_, _, retryAttempt, _) =>
+                                          {
+                                              app.Logger.LogInformation($"PollingId request attempt n°{retryAttempt}");
+                                          })
+                                          .ExecuteAndCaptureAsync(async () =>
+                                          {
+                                              return await tooGoodToGoService.AuhenticateByPollingIdAsync(authenticateByEmailResponse.PollingId);
+                                          });
+
+                if (polling.Outcome == OutcomeType.Failure)
                 {
-                    pollingAttempts++;
-                    app.Logger.LogInformation("PollingId request attempt n°{pollingAttempts}", pollingAttempts);
+                    //TODO: App cant make any requests to TooGoodToGo's services, what should we do?
 
-                    authenticateByPollingIdResponse = await tooGoodToGoService.AuhenticateByPollingIdAsync(authenticateByEmailResponse.PollingId);
-
-                    if (authenticateByPollingIdResponse != null)
-                    {
-                        Context context = app.Services.GetService<Context>();
-                        context.AccessToken = authenticateByPollingIdResponse.AccessToken;
-                        context.RefreshToken = authenticateByPollingIdResponse.RefreshToken;
-                        context.TooGoodToGoUserId = authenticateByPollingIdResponse.StartupData.User.UserId;
-                        break;
-                    }
-
-                    await Task.Delay(TimeSpan.FromSeconds(15));
+                    app.Logger.LogInformation($"Reached polling limit for PollingId: {authenticateByEmailResponse.PollingId}, polling has stopped");
+                    
+                    return;
                 }
 
+                Context context = app.Services.GetService<Context>();
+                context.AccessToken = polling.Result.AccessToken;
+                context.RefreshToken = polling.Result.RefreshToken;
+                context.TooGoodToGoUserId = polling.Result.StartupData.User.UserId;
+                
                 app.Logger.LogInformation("Successfuly authenticated to TooGoodToGo's services");
             }
             catch (Exception exception)
