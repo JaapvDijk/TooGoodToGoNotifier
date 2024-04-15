@@ -7,7 +7,7 @@ import { User } from './apiClient/data-contracts';
 
 function App() {
     const [data, setData] = useState<User[] | null>(null); //Any?
-    //
+    //test
     useEffect(() => {
         const fetchData = async () => {
             const api = new Api({
