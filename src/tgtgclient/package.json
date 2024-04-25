@@ -10,10 +10,11 @@
     "@types/node": "^16.18.96",
     "@types/react": "^18.2.75",
     "@types/react-dom": "^18.2.24",
+    "openapi-fetch": "^0.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-query": "^3.39.3",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -39,5 +40,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.13.4",
+    "openapi-typescript": "^7.0.0-next.10",
+    "typescript": "^5.4.5"
   }
 }

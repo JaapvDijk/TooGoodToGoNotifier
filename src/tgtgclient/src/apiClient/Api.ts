@@ -17,6 +17,20 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Basket
+   * @name BasketHelloworldList
+   * @request GET:/api/Basket/helloworld
+   */
+  basketHelloworldList = (params: RequestParams = {}) =>
+    this.request<string, ProblemDetails>({
+      path: `/api/Basket/helloworld`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Basket
    * @name BasketFavoriteList
    * @summary Get favorite baskets
    * @request GET:/api/Basket/favorite

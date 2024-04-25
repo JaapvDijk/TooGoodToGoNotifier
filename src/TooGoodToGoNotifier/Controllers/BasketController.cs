@@ -21,6 +21,16 @@ namespace TooGoodToGoNotifier.Controllers
             _basketService = basketService;
         }
 
+        [HttpGet("helloworld")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Produces("application/json")]
+        public async Task<ActionResult<string>> GetHelloWorld()
+        {
+            IEnumerable<string> hello = new List<string> { "Hello", "World" };
+            return Ok(hello);
+        }
+
         /// <summary>
         /// Get favorite baskets
         /// </summary>
