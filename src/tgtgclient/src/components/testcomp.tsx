@@ -1,6 +1,5 @@
 ﻿import { useQuery } from 'react-query';
-import { Api } from '../../apiClient/Api';
-
+import { Api } from '../apiClient/Api';
 
 
 const api = new Api();
@@ -9,7 +8,6 @@ const api = new Api();
 const TestComp = () => {
     const getHello = async () => {
         const res = await api.basketHelloworldList();
-
         return res.data;
     };
 
@@ -19,12 +17,14 @@ const TestComp = () => {
     {
         return(
         <>
-            Request Failed <br/>
-            <button onClick={() => refetch()}>Refetch Data</button>
+            Requests Failed
+            <button onClick={() => refetch()}>Refetch</button>
         </>
         )
-    }
-    if (isLoading) return <div>Loading...</div>;
+    }   
+    if (isLoading) return(
+        <div>Loading: {isLoading}</div>
+    )
 
     return (
         <>

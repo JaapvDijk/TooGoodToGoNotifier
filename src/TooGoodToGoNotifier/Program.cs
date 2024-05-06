@@ -24,6 +24,9 @@ using TooGoodToGoNotifier.Entities;
 using TooGoodToGoNotifier.Interfaces;
 using TooGoodToGoNotifier.Jobs;
 using TooGoodToGoNotifier.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace TooGoodToGoNotifier
 {
@@ -44,6 +47,7 @@ namespace TooGoodToGoNotifier
             }
 
             app.UseAuthorization();
+            app.UseAuthentication();
             app.MapControllers();
             await app.AuthenticateToTooGoodToGoServices();
             app.ScheduleBackgroundJobs(); // Coravel jobs must be scheduled at startup, otherwise RunOnceAtStart() method won't work
@@ -66,6 +70,20 @@ namespace TooGoodToGoNotifier
             .AddNLog();
 
             services.AddControllers();
+
+            services.AddAuthentication()
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("aaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbb")), //Configuration["AppSettings:JwtSecret"]
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
             services.AddLogging()
             .AddEndpointsApiExplorer()
@@ -116,17 +134,6 @@ namespace TooGoodToGoNotifier
             })
             .AddPolicyHandler(GetWaitAndRetryForeverPolicy)
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(10));
-            
-            //services.AddCors(options =>
-            //{
-            //    options.AddDefaultPolicy(builder =>
-            //    {
-            //        //TODO: restrict further in production
-            //        builder.AllowAnyOrigin()
-            //        .AllowAnyMethod()
-            //        .AllowAnyHeader();
-            //    });
-            //});
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetWaitAndRetryForeverPolicy(IServiceProvider serviceProvider, HttpRequestMessage httpRequestMessage)

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Google.Apis.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TooGoodToGoNotifier.Entities;
@@ -34,6 +37,30 @@ namespace TooGoodToGoNotifier.Services
             _dbContext.Users.Add(user);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<User> Authenticate(GoogleJsonWebSignature.Payload payload)
+        {
+            await Task.Delay(1);
+            return this.FindUserOrAdd(payload);
+        }
+
+        private User FindUserOrAdd(GoogleJsonWebSignature.Payload payload)
+        {
+            var u = _dbContext.Users.Where(x => x.Email == payload.Email).FirstOrDefault();
+            if (u == null)
+            {
+                u = new User()
+                {
+                    //Name = payload.Name,
+                    Email = payload.Email,
+                    //oauthSubject = payload.Subject,
+                    //oauthIssuer = payload.Issuer
+                };
+                _dbContext.Users.Add(u);
+            }
+
+            return u;
         }
     }
 }

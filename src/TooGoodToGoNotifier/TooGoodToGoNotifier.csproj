@@ -9,7 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="coravel" Version="4.2.1" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <PackageReference Include="MailKit" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.18" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
       <PrivateAssets>all</PrivateAssets>

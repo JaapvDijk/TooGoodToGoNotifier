@@ -1,8 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using TooGoodToGoNotifier.Entities;
 using TooGoodToGoNotifier.Interfaces;
 using TooGoodToGoNotifier.Models;
@@ -48,6 +55,42 @@ namespace TooGoodToGoNotifier.Controllers
         {
             await _userService.CreateUserAsync(request.Email);
             return Ok();
+        }
+         
+        [AllowAnonymous]
+        [HttpPost("google")]
+        public async Task<IActionResult> Google([FromBody] GoogleIdToken idToken)
+        {
+            try
+            {
+                var validatedPayload = GoogleJsonWebSignature.ValidateAsync(idToken.token, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                var user = await _userService.Authenticate(validatedPayload);
+
+                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbb")); //AppSettings.appSettings.JwtSecret
+                var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var claims = new[]
+                {
+                    //new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt("", user.Email)), //AppSettings.appSettings.JwtEmailEncryption
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                };
+                var token = new JwtSecurityToken(string.Empty,
+                  string.Empty,
+                  claims,
+                  expires: DateTime.Now.AddHours(24),
+                  signingCredentials: credentials);
+                
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token)
+                });
+            }
+            catch (Exception ex)
+            {
+                BadRequest(ex.Message);
+            }
+            return BadRequest();
         }
     }
 }
