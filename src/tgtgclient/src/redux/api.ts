@@ -1,5 +1,5 @@
 import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
-import store, { RootState } from "./store";
+import { store, RootState } from "./store";
 import { Api } from "../apiClient/Api";
 import { GoogleJwtPayload } from "../types/googleJwt";
 import { jwtDecode } from "jwt-decode";
@@ -18,7 +18,7 @@ type SliceState = {
 
 const myCustomFetch: WindowOrWorkerGlobalScope['fetch'] = async (input: RequestInfo, init?: RequestInit) => {
     const customHeaders = {
-        'Authorization': `Bearer ${store.getState().auth.token}`,
+        'Authorization': `Bearer`, //`Bearer ${store.getState().auth.token}`,
     };
 
     if (init && init.headers) {

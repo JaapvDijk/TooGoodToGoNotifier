@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Provider } from "react-redux";
-import store from "./redux/store";
 import App from './App';
 import './index.css';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from './redux/store';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,7 +15,9 @@ root.render(
     <React.StrictMode>
         <GoogleOAuthProvider clientId="289249593835-5pmogn6cs5f6hm1le1p4kqh45pdfvgej.apps.googleusercontent.com">
             <Provider store={store}>
-                <App />
+                <PersistGate loading={null} persistor={persistor}>
+                    <App />
+                </PersistGate>
             </Provider>
         </GoogleOAuthProvider>
     </React.StrictMode>

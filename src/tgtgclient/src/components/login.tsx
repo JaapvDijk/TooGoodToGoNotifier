@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { authSelectors, authSlice, authThunks } from "../redux/auth";
 import { GoogleJwtPayload } from "../types/googleJwt";
 import { useSelector } from "react-redux";
-import store from "../redux/store";
+import { store } from "../redux/store";
 
 //Use GoogleLogin to get jwt id token
 //then send token to server to get jwt access token (only valid for this app)
