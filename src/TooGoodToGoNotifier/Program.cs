@@ -79,7 +79,7 @@ namespace TooGoodToGoNotifier
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("aaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbb")), //Configuration["AppSettings:JwtSecret"]
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"])),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

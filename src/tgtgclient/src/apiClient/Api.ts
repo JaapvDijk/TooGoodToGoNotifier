@@ -9,7 +9,14 @@
  * ---------------------------------------------------------------
  */
 
-import { Basket, CreateUserRequest, ProblemDetails, UpdateBasketsFavoriteStatusRequest, User } from "./data-contracts";
+import {
+  Basket,
+  CreateUserRequest,
+  GoogleIdToken,
+  ProblemDetails,
+  UpdateBasketsFavoriteStatusRequest,
+  User,
+} from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -97,6 +104,21 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   userCreate = (data: CreateUserRequest, params: RequestParams = {}) =>
     this.request<void, ProblemDetails>({
       path: `/api/User`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags User
+   * @name UserGoogleCreate
+   * @request POST:/api/User/google
+   */
+  userGoogleCreate = (data: GoogleIdToken, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/User/google`,
       method: "POST",
       body: data,
       type: ContentType.Json,

@@ -1,11 +1,10 @@
 ﻿import { useQuery } from 'react-query';
-import { Api } from '../apiClient/Api';
-
-
-const api = new Api();
-
+import { useSelector } from 'react-redux';
+import { apiSelectors } from '../redux/api';
 
 const TestComp = () => {
+    const api = useSelector(apiSelectors.selectApi);
+
     const getHello = async () => {
         const res = await api.basketHelloworldList();
         return res.data;

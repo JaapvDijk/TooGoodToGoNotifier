@@ -9,9 +9,6 @@
  * ---------------------------------------------------------------
  */
 
-import { useSelector } from "react-redux";
-import { authSelectors } from "../redux/auth";
-
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -58,17 +55,15 @@ export enum ContentType {
 }
 
 export class HttpClient<SecurityDataType = unknown> {
-  private baseUrl: string = 'http://localhost:5000';
+  public baseUrl: string = "";
   private securityData: SecurityDataType | null = null;
   private securityWorker?: ApiConfig<SecurityDataType>["securityWorker"];
   private abortControllers = new Map<CancelToken, AbortController>();
-  //private token = useSelector(authSelectors.selectToken);
-
   private customFetch = (...fetchParams: Parameters<typeof fetch>) => fetch(...fetchParams);
 
   private baseApiParams: RequestParams = {
     credentials: "same-origin",
-    //headers: { Authorization: this.token },
+    headers: {},
     redirect: "follow",
     referrerPolicy: "no-referrer",
   };

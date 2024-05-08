@@ -19,6 +19,10 @@ export interface CreateUserRequest {
   email?: string | null;
 }
 
+export interface GoogleIdToken {
+  token?: string | null;
+}
+
 export interface ProblemDetails {
   type?: string | null;
   title?: string | null;
@@ -38,5 +42,7 @@ export interface User {
   /** @format uuid */
   id?: string;
   email?: string | null;
+  oauthSubject?: string | null;
+  oauthIssuer?: string | null;
   favoriteBaskets?: string[] | null;
 }

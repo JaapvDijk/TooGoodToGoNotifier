@@ -10,6 +10,8 @@ namespace TooGoodToGoNotifier.Entities
         public Guid Id { get; set; }
 
         public string Email { get; set; }
+        public string OauthSubject { get; set; }
+        public string OauthIssuer { get; set; }
 
         public List<string> FavoriteBaskets { get; set; }
     }

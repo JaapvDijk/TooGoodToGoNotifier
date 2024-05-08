@@ -9,9 +9,6 @@ import store from "../redux/store";
 //then send token to server to get jwt access token (only valid for this app)
 
 const Login = () => {
-    const isLoggedIn = useSelector(authSelectors.selectIsAuthenticated);
-    const rToken = useSelector(authSelectors.selectToken);
-
     const logout = () => {
         store.dispatch(authThunks.logout())
     }
@@ -20,8 +17,6 @@ const Login = () => {
         alert("Login failed");
     };
 
-    //Received an ID token from google.
-    //Exchange it for a token from the server..
     const login = (response: CredentialResponse) => {
         const tokenBlob = new Blob([JSON.stringify({ token: response.credential }, null, 2)], { type: 'application/json' });
         console.log('received google token, req from api')
@@ -34,14 +29,11 @@ const Login = () => {
         .then(resp => {
             resp.json().then(user => {
                 store.dispatch(authThunks.login(user.token));
-
-                console.log('token: ' + user.token);
-                console.log('redux logged in: ' + isLoggedIn);
-                console.log('redux token: ' + rToken);
             });
         })
     };
 
+    const isLoggedIn = useSelector(authSelectors.selectIsAuthenticated);
     let content = isLoggedIn ?
         (
             <>
@@ -62,15 +54,3 @@ const Login = () => {
 }
 
 export default Login;
-
-//TODO: use in http client
-export function UserIsValid(token: any) {
-    console.log("the token is " + token.user);
-    if (token.isAuthenticated) {
-        var decodedToken = jwtDecode<GoogleJwtPayload>(token.user); //TODO: GoogleJwtPayload invalid type. need type from own API.
-        if (decodedToken.exp! > new Date().getTime() / 1000) return true;
-        else return false;
-    }
-    return false;
-}
-

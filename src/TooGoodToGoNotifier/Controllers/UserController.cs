@@ -8,6 +8,7 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using TooGoodToGoNotifier.Entities;
@@ -22,11 +23,13 @@ namespace TooGoodToGoNotifier.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
+        private readonly IConfiguration _config;
 
-        public UserController(ILogger<UserController> logger, IUserService userService)
+        public UserController(ILogger<UserController> logger, IUserService userService, IConfiguration config)
         {
             _logger = logger;
             _userService = userService;
+            _config = config;
         }
 
         /// <summary>
@@ -56,7 +59,7 @@ namespace TooGoodToGoNotifier.Controllers
             await _userService.CreateUserAsync(request.Email);
             return Ok();
         }
-         
+        
         [AllowAnonymous]
         [HttpPost("google")]
         public async Task<IActionResult> Google([FromBody] GoogleIdToken idToken)
@@ -65,8 +68,7 @@ namespace TooGoodToGoNotifier.Controllers
             {
                 var validatedPayload = GoogleJsonWebSignature.ValidateAsync(idToken.token, new GoogleJsonWebSignature.ValidationSettings()).Result;
                 var user = await _userService.Authenticate(validatedPayload);
-
-                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbb")); //AppSettings.appSettings.JwtSecret
+                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["JwtSecret"]));
                 var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var claims = new[]

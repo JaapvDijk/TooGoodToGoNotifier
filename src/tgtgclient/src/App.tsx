@@ -13,17 +13,6 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-    //useEffect(() => {
-    //    function startGapi() {
-    //        gapi.client.init({
-    //            clientId: "289249593835-5pmogn6cs5f6hm1le1p4kqh45pdfvgej.apps.googleusercontent.com",
-    //            scope: ""
-    //        })
-    //    }
-
-    //    gapi.load('client:auth2', startGapi);
-    //});
-
     return (
     <div className="App">
         <header className="App-header">
