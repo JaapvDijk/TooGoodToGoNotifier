@@ -1,7 +1,5 @@
-﻿import { CredentialResponse, GoogleLogin, googleLogout } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import { authSelectors, authSlice, authThunks } from "../redux/auth";
-import { GoogleJwtPayload } from "../types/googleJwt";
+﻿import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { authSelectors, authThunks } from "../redux/auth";
 import { useSelector } from "react-redux";
 import { store } from "../redux/store";
 
