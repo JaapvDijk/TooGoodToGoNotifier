@@ -2,33 +2,19 @@
 import { authSelectors, authThunks } from "../redux/auth";
 import { useSelector } from "react-redux";
 import { store } from "../redux/store";
-
-//Use GoogleLogin to get jwt id token
-//then send token to server to get jwt access token (only valid for this app)
+import { ApiClient } from "../apiClient/ApiClient";
 
 const Login = () => {
+    const api = ApiClient.getNoAuthInstance();
+
     const logout = () => {
         store.dispatch(authThunks.logout())
     }
 
-    const onError = () => {
-        alert("Login failed");
-    };
-
-    const login = (response: CredentialResponse) => {
-        const tokenBlob = new Blob([JSON.stringify({ token: response.credential }, null, 2)], { type: 'application/json' });
-        console.log('received google token, req from api')
-        //TODO: url
-        fetch("http://localhost:5000/api/User/google", {
-            method: 'POST',
-            body: tokenBlob,
-            mode: 'cors'
-        })
-        .then(resp => {
-            resp.json().then(user => {
-                store.dispatch(authThunks.login(user.token));
-            });
-        })
+    const login = async (response: CredentialResponse) => {
+        await api.userGoogleCreate({ token: response.credential })
+                .then((response) => response.json())
+                .then((data) => store.dispatch(authThunks.login(data.token)));   
     };
 
     const isLoggedIn = useSelector(authSelectors.selectIsAuthenticated);
@@ -40,7 +26,7 @@ const Login = () => {
         ) :
         (
             <>
-                <GoogleLogin onSuccess={login} onError={onError}/>
+                <GoogleLogin onSuccess={login} />
             </>
         );
 

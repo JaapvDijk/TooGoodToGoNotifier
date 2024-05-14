@@ -4,7 +4,7 @@ import { Api } from "./Api";
 import { authThunks } from "../redux/auth";
 import { AccesJwtPayload } from "../types/accesJwtPayload";
 
-const customFetch: WindowOrWorkerGlobalScope['fetch'] = async (input: RequestInfo, init?: RequestInit) => {
+const authenticatedFetch: WindowOrWorkerGlobalScope['fetch'] = async (input: RequestInfo, init?: RequestInit) => {
     const token = store.getState().auth.token;
 
     if (UserIsValid(token)) {
@@ -31,6 +31,7 @@ const customFetch: WindowOrWorkerGlobalScope['fetch'] = async (input: RequestInf
 //Singleton
 export class ApiClient extends Api{
     private static instance: ApiClient;
+    private static noAuthInstance: ApiClient;
 
     private constructor() { super() }
 
@@ -40,10 +41,21 @@ export class ApiClient extends Api{
         }
         this.instance = new Api({
             baseUrl: 'http://localhost:5000',
-            customFetch
+            customFetch: authenticatedFetch
         });
 
         return this.instance;
+    }
+
+    static getNoAuthInstance() {
+        if (this.noAuthInstance) {
+            return this.noAuthInstance;
+        }
+        this.noAuthInstance = new Api({
+            baseUrl: 'http://localhost:5000',
+        });
+
+        return this.noAuthInstance;
     }
 }
 
