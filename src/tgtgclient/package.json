@@ -4,6 +4,10 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.17",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.2.3",
     "@testing-library/jest-dom": "^5.17.0",
@@ -24,6 +28,7 @@
     "react-scripts": "5.0.1",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
+    "styled-components": "^6.1.11",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

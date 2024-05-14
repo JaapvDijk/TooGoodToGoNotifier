@@ -7,19 +7,34 @@ import App from './App';
 import './index.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './redux/store';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { StyledEngineProvider } from '@mui/material';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: Infinity,
+            structuralSharing: false
+        }
+    }
+});
+
 root.render(
     <React.StrictMode>
-        <GoogleOAuthProvider clientId="289249593835-5pmogn6cs5f6hm1le1p4kqh45pdfvgej.apps.googleusercontent.com">
-            <Provider store={store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <App />
-                </PersistGate>
-            </Provider>
-        </GoogleOAuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <GoogleOAuthProvider clientId="289249593835-5pmogn6cs5f6hm1le1p4kqh45pdfvgej.apps.googleusercontent.com">
+                <Provider store={store}>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <StyledEngineProvider injectFirst>
+                            <App />
+                        </StyledEngineProvider>
+                    </PersistGate>
+                </Provider>
+                </GoogleOAuthProvider>
+            </QueryClientProvider>
     </React.StrictMode>
 );
 
