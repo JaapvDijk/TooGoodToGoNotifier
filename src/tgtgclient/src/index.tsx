@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './redux/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { StyledEngineProvider } from '@mui/material';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -29,7 +30,9 @@ root.render(
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <StyledEngineProvider injectFirst>
-                            <App />
+                            <BrowserRouter>
+                                <App />
+                            </BrowserRouter>
                         </StyledEngineProvider>
                     </PersistGate>
                 </Provider>

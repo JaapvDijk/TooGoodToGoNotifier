@@ -59,6 +59,7 @@
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.13.4",
     "openapi-typescript": "^7.0.0-next.10",
+    "react-router-dom": "^6.23.1",
     "typescript": "^5.4.5"
   }
 }
