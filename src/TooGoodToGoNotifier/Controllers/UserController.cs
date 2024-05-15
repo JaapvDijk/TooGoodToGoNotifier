@@ -73,10 +73,11 @@ namespace TooGoodToGoNotifier.Controllers
 
                 var claims = new[]
                 {
-                    //new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt("", user.Email)), //AppSettings.appSettings.JwtEmailEncryption
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("picture", user.Picture),
+                    new Claim("firstName", user.FirstName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    //new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt("", user.Email)), //AppSettings.appSettings.JwtEmailEncryption
                 };
                 var token = new JwtSecurityToken(string.Empty,
                   string.Empty,

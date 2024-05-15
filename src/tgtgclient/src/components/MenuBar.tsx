@@ -45,7 +45,6 @@ function ResponsiveAppBar() {
     }
 
     const api = ApiClient.getNoAuthInstance();
-
     const login = async (response: CredentialResponse) => {
         await api.userGoogleCreate({ token: response.credential })
             .then((response) => response.json())
@@ -56,7 +55,7 @@ function ResponsiveAppBar() {
     const tokenPayload = useSelector(authSelectors.selectTokenPayload);
 
     return (
-        <AppBar position="static">
+        <AppBar>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -149,8 +148,8 @@ function ResponsiveAppBar() {
                     {isLoggedIn ?
                         (
                             <>
-                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    {tokenPayload?.email}
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, pb: 0 }}>
+                                    {tokenPayload?.firstName} &nbsp;
                                     <Tooltip title="Open settings">
                                        <Avatar src={tokenPayload?.picture} />
                                     </Tooltip>

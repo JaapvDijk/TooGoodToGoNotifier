@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TooGoodToGoNotifier.Entities;
 
@@ -10,9 +11,11 @@ using TooGoodToGoNotifier.Entities;
 namespace TooGoodToGoNotifier.Migrations
 {
     [DbContext(typeof(TooGoodToGoNotifierDbContext))]
-    partial class TooGoodToGoNotifierDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240515111102_user.firstname")]
+    partial class userfirstname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
