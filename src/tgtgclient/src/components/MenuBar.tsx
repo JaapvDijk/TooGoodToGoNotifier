@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-//import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -16,8 +16,9 @@ import { authSelectors, authThunks } from '../redux/auth';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { ApiClient } from '../apiClient/ApiClient';
 import { useSelector } from 'react-redux';
+import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Shops', 'Favorites', 'Notifications'];
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -52,12 +53,13 @@ function ResponsiveAppBar() {
     };
 
     const isLoggedIn = useSelector(authSelectors.selectIsAuthenticated);
+    const tokenPayload = useSelector(authSelectors.selectTokenPayload);
 
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    {/*<AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />*/}
+                    <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
@@ -71,8 +73,7 @@ function ResponsiveAppBar() {
                             letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
-                        }}
-                    >
+                        }}>
                         LOGO
                     </Typography>
 
@@ -83,9 +84,10 @@ function ResponsiveAppBar() {
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
                             onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            {/*<MenuIcon />*/}
+                            color="inherit">
+
+                        <MenuIcon />
+
                         </IconButton>
                         <Menu
                             id="menu-appbar"
@@ -103,8 +105,7 @@ function ResponsiveAppBar() {
                             onClose={handleCloseNavMenu}
                             sx={{
                                 display: { xs: 'block', md: 'none' },
-                            }}
-                        >
+                            }}>
                             {pages.map((page) => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">{page}</Typography>
@@ -112,7 +113,7 @@ function ResponsiveAppBar() {
                             ))}
                         </Menu>
                     </Box>
-                    {/*<AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />*/}
+                    <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
                         noWrap
@@ -148,11 +149,12 @@ function ResponsiveAppBar() {
                     {isLoggedIn ?
                         (
                             <>
-                                <Tooltip title="Open settings">
-                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                                    </IconButton>
-                                </Tooltip>
+                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                    {tokenPayload?.email}
+                                    <Tooltip title="Open settings">
+                                       <Avatar src={tokenPayload?.picture} />
+                                    </Tooltip>
+                                </IconButton>
                                 <Menu
                                     sx={{ mt: '45px' }}
                                     id="menu-appbar"
@@ -167,8 +169,7 @@ function ResponsiveAppBar() {
                                         horizontal: 'right',
                                     }}
                                     open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                >
+                                    onClose={handleCloseUserMenu}>
 
                                     <MenuItem key='Profile' onClick={handleCloseUserMenu}>
                                         <Typography textAlign="center">Profile</Typography>

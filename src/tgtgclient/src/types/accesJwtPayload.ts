@@ -2,4 +2,5 @@
 
 export interface AccesJwtPayload extends JwtPayload {
     email: string;
+    picture: string;
 }

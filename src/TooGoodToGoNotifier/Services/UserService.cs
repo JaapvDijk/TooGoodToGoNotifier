@@ -54,7 +54,8 @@ namespace TooGoodToGoNotifier.Services
                 {
                     Email = payload.Email,
                     OauthSubject = payload.Subject,
-                    OauthIssuer = payload.Issuer
+                    OauthIssuer = payload.Issuer,
+                    Picture = payload.Picture,
                 };
                 _dbContext.Users.Add(u);
             }
