@@ -4,6 +4,9 @@ import { Api } from "./Api";
 import { authThunks } from "../redux/auth";
 import { AccesJwtPayload } from "../types/accesJwtPayload";
 
+//Regen Api Client:
+//npx swagger-typescript-api -p http://localhost:5000/swagger/v1/swagger.json -o ./src/apiClient --modular
+
 const authenticatedFetch: WindowOrWorkerGlobalScope['fetch'] = async (input: RequestInfo, init?: RequestInit) => {
     const token = store.getState().auth.token;
 

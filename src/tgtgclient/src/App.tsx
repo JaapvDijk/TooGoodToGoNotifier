@@ -17,6 +17,21 @@ function App() {
                         <TestComp />
                     } />
                 </Routes>
+                <Routes>
+                    <Route path="/profile" element={
+                        <TestComp />
+                    } />
+                </Routes>
+                <Routes>
+                    <Route path="/shops" element={
+                        <TestComp />
+                    } />
+                </Routes>
+                <Routes>
+                    <Route path="/shops" element={
+                        <TestComp />
+                    } />
+                </Routes>
 
             </Container>
 

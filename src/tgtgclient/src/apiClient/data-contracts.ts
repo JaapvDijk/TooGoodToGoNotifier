@@ -42,6 +42,8 @@ export interface User {
   /** @format uuid */
   id?: string;
   email?: string | null;
+  picture?: string | null;
+  firstName?: string | null;
   oauthSubject?: string | null;
   oauthIssuer?: string | null;
   favoriteBaskets?: string[] | null;

@@ -18,7 +18,7 @@ import { ApiClient } from '../apiClient/ApiClient';
 import { useSelector } from 'react-redux';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Shops', 'Favorites', 'Notifications'];
+const pages = ['Profile', 'Shops', 'Subscriptions'];
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -148,10 +148,10 @@ function ResponsiveAppBar() {
                     {isLoggedIn ?
                         (
                             <>
-                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, pb: 0 }}>
+                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, pb: 0 }}>
                                     {tokenPayload?.firstName} &nbsp;
                                     <Tooltip title="Open settings">
-                                       <Avatar src={tokenPayload?.picture} />
+                                        <Avatar src={tokenPayload?.picture} />
                                     </Tooltip>
                                 </IconButton>
                                 <Menu
@@ -173,11 +173,11 @@ function ResponsiveAppBar() {
                                     <MenuItem key='Profile' onClick={handleCloseUserMenu}>
                                         <Typography textAlign="center">Profile</Typography>
                                     </MenuItem>
-                                    <MenuItem key='Account' onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">Account</Typography>
+                                    <MenuItem key='Shops' onClick={handleCloseUserMenu}>
+                                        <Typography textAlign="center">Shops</Typography>
                                     </MenuItem>
-                                    <MenuItem key='Dashboard' onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">Dashboard</Typography>
+                                        <MenuItem key='Subscriptions' onClick={handleCloseUserMenu}>
+                                        <Typography textAlign="center">Subscriptions</Typography>
                                     </MenuItem>
                                     <MenuItem key='Logout' onClick={() => { handleCloseUserMenu(); logout(); }}>
                                         <Typography textAlign="center">Logout</Typography>

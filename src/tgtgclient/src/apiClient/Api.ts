@@ -81,6 +81,34 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
+   * @tags Heartbeat
+   * @name HeartbeatHeartbeatList
+   * @request GET:/api/Heartbeat/heartbeat
+   */
+  heartbeatHeartbeatList = (params: RequestParams = {}) =>
+    this.request<string, any>({
+      path: `/api/Heartbeat/heartbeat`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Heartbeat
+   * @name HeartbeatIsloggedinList
+   * @request GET:/api/Heartbeat/isloggedin
+   */
+  heartbeatIsloggedinList = (params: RequestParams = {}) =>
+    this.request<string, ProblemDetails>({
+      path: `/api/Heartbeat/isloggedin`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
    * @tags User
    * @name UserList
    * @summary Get all users
