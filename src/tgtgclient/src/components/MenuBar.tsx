@@ -55,7 +55,7 @@ function ResponsiveAppBar() {
     const tokenPayload = useSelector(authSelectors.selectTokenPayload);
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx={{ backgroundColor: '#057267' }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
