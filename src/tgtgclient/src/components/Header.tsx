@@ -17,12 +17,15 @@ import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { ApiClient } from '../apiClient/ApiClient';
 import { useSelector } from 'react-redux';
 import AdbIcon from '@mui/icons-material/Adb';
+import { CircularProgress } from '@mui/material';
+import { useState } from 'react';
 
 const pages = ['Profile', 'Shops', 'Subscriptions'];
 
 function ResponsiveAppBar() {
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -48,7 +51,10 @@ function ResponsiveAppBar() {
     const login = async (response: CredentialResponse) => {
         await api.userGoogleCreate({ token: response.credential })
             .then((response) => response.json())
-            .then((data) => store.dispatch(authThunks.login(data.token)));
+            .then((data) => {
+                store.dispatch(authThunks.login(data.token))
+                setIsLoggingIn((false));
+            });
     };
 
     const isLoggedIn = useSelector(authSelectors.selectIsAuthenticated);
@@ -127,8 +133,7 @@ function ResponsiveAppBar() {
                             letterSpacing: '.3rem',
                             color: 'inherit',
                             textDecoration: 'none',
-                        }}
-                    >
+                        }}>
                         LOGO
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -136,15 +141,14 @@ function ResponsiveAppBar() {
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
+                                sx={{ my: 2, color: 'white', display: 'block' }}>
                                 {page}
                             </Button>
                         ))}
                     </Box>
 
+                    {isLoggingIn ? <CircularProgress color="info" /> : <></>} 
                     <Box sx={{ flexGrow: 0 }}>
-
                     {isLoggedIn ?
                         (
                             <>
@@ -179,7 +183,7 @@ function ResponsiveAppBar() {
                                         <MenuItem key='Subscriptions' onClick={handleCloseUserMenu}>
                                         <Typography textAlign="center">Subscriptions</Typography>
                                     </MenuItem>
-                                    <MenuItem key='Logout' onClick={() => { handleCloseUserMenu(); logout(); }}>
+                                        <MenuItem key='Logout' onClick={() => { handleCloseUserMenu(); logout(); }}>
                                         <Typography textAlign="center">Logout</Typography>
                                     </MenuItem>
                                 </Menu>
@@ -187,7 +191,9 @@ function ResponsiveAppBar() {
                         ) :
                         (
                             <>
-                                <GoogleLogin onSuccess={login} />
+                                    <GoogleLogin
+                                        click_listener={() => { setIsLoggingIn(true) }}
+                                        onSuccess={login} />
                             </>
                         )
                     }

@@ -14,20 +14,22 @@ const TestComp = () => {
     if (error)
     {
         return(
-        <>
+        <div style={{ padding: '150px 0 150px 0' }}>
             Requests Failed
             <button onClick={() => refetch()}>Refetch</button>
-        </>
+        </div>
         )
     }   
     if (isLoading) return(
-        <div>Loading: {isLoading}</div>
+        <div style={{ padding: '150px 0 150px 0' }}>
+            Loading: {isLoading}
+        </div>
     )
 
     return (
-        <>
+        <div style={{ padding: '150px 0 150px 0'}}>
             {data}  
-        </>
+        </div>
     );
 }
 

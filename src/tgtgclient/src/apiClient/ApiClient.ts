@@ -63,7 +63,9 @@ export class ApiClient extends Api{
 }
 
 export function UserIsValid(token: string) {
-    var decodedToken = jwtDecode<AccesJwtPayload>(token);
+    if (token.length < 20)
+        return false;
 
+    var decodedToken = jwtDecode<AccesJwtPayload>(token);
     return decodedToken.exp! > new Date().getTime() / 1000;
 }
