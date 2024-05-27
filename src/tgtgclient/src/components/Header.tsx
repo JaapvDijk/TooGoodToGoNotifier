@@ -191,9 +191,9 @@ function ResponsiveAppBar() {
                         ) :
                         (
                             <>
-                                    <GoogleLogin
-                                        click_listener={() => { setIsLoggingIn(true) }}
-                                        onSuccess={login} />
+                                <GoogleLogin
+                                    click_listener={() => { setIsLoggingIn(true) }}
+                                    onSuccess={login} />
                             </>
                         )
                     }

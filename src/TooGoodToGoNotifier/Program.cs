@@ -54,6 +54,9 @@ namespace TooGoodToGoNotifier
             app.UseCors(x => x.WithOrigins("http://localhost:3000") //TODO: take url from settings, development and production url
                .AllowAnyMethod()
                .AllowAnyHeader());
+
+            await app.FindRateLimitTGTGApi();
+
             app.Run();
         }
 

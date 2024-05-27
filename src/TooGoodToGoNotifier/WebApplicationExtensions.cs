@@ -92,10 +92,17 @@ namespace TooGoodToGoNotifier
             }
         }
 
+        public static Task<bool> FindRateLimitTGTGApi(this WebApplication app)
+        {
+            //
+            return Task.FromResult(true);
+        }
+
         private static Task<bool> CurrentTimeIsBetweenConfiguredRangeAsync(NotifierOptions notifierOptions)
         {
             TimeSpan currentTime = DateTime.Now.TimeOfDay;
             return Task.FromResult(currentTime >= notifierOptions.StartTime && currentTime <= notifierOptions.EndTime);
         }
+
     }
 }
