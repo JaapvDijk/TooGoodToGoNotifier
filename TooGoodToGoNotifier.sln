@@ -40,7 +40,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "tgtgclient", "src\tgtgclien
 		SlnRelativePath = "src\tgtgclient\"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsTheLimit", "WhatsTheLimit\WhatsTheLimit.csproj", "{C255A541-BD92-4BD5-9D88-41105B75080C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempTests", "TempTests\TempTests.csproj", "{5995052C-7DD2-41A4-A9D2-475EE222D3AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,10 +68,10 @@ Global
 		{BB34FA1F-F6AE-48BE-BAF7-308DA3DBFB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB34FA1F-F6AE-48BE-BAF7-308DA3DBFB30}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{BB34FA1F-F6AE-48BE-BAF7-308DA3DBFB30}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{C255A541-BD92-4BD5-9D88-41105B75080C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C255A541-BD92-4BD5-9D88-41105B75080C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C255A541-BD92-4BD5-9D88-41105B75080C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C255A541-BD92-4BD5-9D88-41105B75080C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5995052C-7DD2-41A4-A9D2-475EE222D3AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5995052C-7DD2-41A4-A9D2-475EE222D3AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5995052C-7DD2-41A4-A9D2-475EE222D3AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5995052C-7DD2-41A4-A9D2-475EE222D3AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

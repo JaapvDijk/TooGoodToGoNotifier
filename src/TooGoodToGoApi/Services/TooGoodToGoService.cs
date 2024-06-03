@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,6 +13,7 @@ using TooGoodToGo.Api.Models.Requests;
 using TooGoodToGo.Api.Models.Responses;
 using TooGoodToGoNotifier.Core;
 using TooGoodToGoNotifier.Core.Options;
+using TooGoodToGoNotifier.Proxy;
 
 namespace TooGoodToGo.Api.Services
 {
@@ -22,8 +24,9 @@ namespace TooGoodToGo.Api.Services
         private readonly HttpClient _httpClient;
         private readonly JsonSerializerSettings _jsonSerializerSettings;
         private readonly IMemoryCache _memoryCache;
+        private readonly ApiRequester _apiRequester;
 
-        public TooGoodToGoService(ILogger<TooGoodToGoService> logger, IOptions<TooGoodToGoApiOptions> apiOptions, HttpClient httpClient, IMemoryCache memoryCache)
+        public TooGoodToGoService(ILogger<TooGoodToGoService> logger, IOptions<TooGoodToGoApiOptions> apiOptions, HttpClient httpClient, IMemoryCache memoryCache, ApiRequester apiRequester)
         {
             _logger = logger;
             _apiOptions = apiOptions.Value;
@@ -36,6 +39,8 @@ namespace TooGoodToGo.Api.Services
                     NamingStrategy = new SnakeCaseNamingStrategy()
                 }
             };
+
+            _apiRequester = apiRequester;
         }
 
         public async Task<GetBasketsResponse> GetFavoriteBasketsAsync(string accessToken, int userId)
@@ -137,23 +142,9 @@ namespace TooGoodToGo.Api.Services
 
         private async Task<T> ExecuteAndThrowIfNotSuccessfulAsync<T>(HttpRequestMessage httpRequestMessage)
         {
-            string httpResponseContent = await ExecuteAndThrowIfNotSuccessfulAsync(httpRequestMessage);
+            string httpResponseContent = await _apiRequester.RequestAndThrowIfNotSuccessfulAsync(httpRequestMessage);
 
             return JsonConvert.DeserializeObject<T>(httpResponseContent, _jsonSerializerSettings);
-        }
-
-        private async Task<string> ExecuteAndThrowIfNotSuccessfulAsync(HttpRequestMessage httpRequestMessage)
-        {
-            HttpResponseMessage response = await _httpClient.SendAsync(httpRequestMessage);
-
-            string httpResponseContent = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new TooGoodToGoRequestException("Error while requesting TooGoodToGo's services", response.StatusCode, httpResponseContent);
-            }
-
-            return httpResponseContent;
         }
 
         private void SerializeHttpRequestContentAsJson(HttpRequestMessage httpRequestMessage, object content)

@@ -24,9 +24,12 @@ using TooGoodToGoNotifier.Entities;
 using TooGoodToGoNotifier.Interfaces;
 using TooGoodToGoNotifier.Jobs;
 using TooGoodToGoNotifier.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TooGoodToGoNotifier.Helpers;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Http;
+using TooGoodToGoNotifier.Proxy;
 
 namespace TooGoodToGoNotifier
 {
@@ -55,7 +58,7 @@ namespace TooGoodToGoNotifier
                .AllowAnyMethod()
                .AllowAnyHeader());
 
-            await app.FindRateLimitTGTGApi();
+            await app.Services.GetRequiredService<FindTheLimit>().Start();
 
             app.Run();
         }
@@ -68,7 +71,7 @@ namespace TooGoodToGoNotifier
 
             LogManager.Setup()
             .LoadConfigurationFromSection(configuration);
-
+                
             builder.Logging.ClearProviders()
             .AddNLog();
 
@@ -82,7 +85,7 @@ namespace TooGoodToGoNotifier
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"])), //from secret store
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
@@ -119,7 +122,10 @@ namespace TooGoodToGoNotifier
             .AddTransient<RefreshAccessTokenJob>()
             .AddTransient<SynchronizeFavoriteBasketsJob>()
             .AddSingleton<Context>()
-            .AddSingleton(cookieContainer);
+            .AddSingleton(cookieContainer)
+            .AddSingleton<ProxyManager>()
+            .AddSingleton<ApiRequester>()
+            .AddSingleton<FindTheLimit>();
 
             services.AddHttpClient<ITooGoodToGoService, TooGoodToGoService>(httpClient =>
             {
@@ -137,6 +143,8 @@ namespace TooGoodToGoNotifier
             })
             .AddPolicyHandler(GetWaitAndRetryForeverPolicy)
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(10));
+
+            services.RemoveAll<IHttpMessageHandlerBuilderFilter>(); // Removes all httpclient logging
         }
 
         private static IAsyncPolicy<HttpResponseMessage> GetWaitAndRetryForeverPolicy(IServiceProvider serviceProvider, HttpRequestMessage httpRequestMessage)
@@ -144,9 +152,9 @@ namespace TooGoodToGoNotifier
             return HttpPolicyExtensions.HandleTransientHttpError()
                 .OrInner<TimeoutRejectedException>()
                 .OrResult(httpResponseMessage => httpResponseMessage.StatusCode == HttpStatusCode.TooManyRequests)
-                .WaitAndRetryForeverAsync(retryAttempt => TimeSpan.FromSeconds(30 * retryAttempt), (_, retryAttempt, timespan) =>
+                .WaitAndRetryForeverAsync(retryAttempt => TimeSpan.FromSeconds(30 * retryAttempt), (resp, retryAttempt, timespan) =>
                 {
-                    serviceProvider.GetService<ILogger<TooGoodToGoService>>().LogInformation("Transient Http, timeout or too many attempts error occured: delaying for {seconds} seconds, then making retry n°{retryAttemptNumber}", timespan.TotalSeconds, retryAttempt);
+                    serviceProvider.GetService<ILogger<TooGoodToGoService>>().LogInformation($"Transient Http, timeout or too many attempts error occured: delaying for {timespan.TotalSeconds} seconds, then making retry n°{retryAttempt}, ex: {resp.Exception?.Message}, status: {resp.Result.StatusCode}");
                 });
         }
     }

@@ -33,7 +33,7 @@ namespace TooGoodToGoNotifier.Jobs
 
         public async Task Invoke()
         {
-            _logger.LogInformation($"{nameof(SynchronizeFavoriteBasketsJob)} started - {{Guid}}", _guid);
+            //_logger.LogInformation($"{nameof(SynchronizeFavoriteBasketsJob)} started - {{Guid}}", _guid);
 
             GetBasketsResponse getBasketsResponse = await _tooGoodToGoService.GetFavoriteBasketsAsync(_context.AccessToken, _context.TooGoodToGoUserId);
 
@@ -51,7 +51,7 @@ namespace TooGoodToGoNotifier.Jobs
 
             await RemoveUnusedBasketsFromFavorites(currentlyFavoritedBaskets, userFavoritedBaskets);
 
-            _logger.LogInformation($"{nameof(SynchronizeFavoriteBasketsJob)} ended - {{Guid}}", _guid);
+            //_logger.LogInformation($"{nameof(SynchronizeFavoriteBasketsJob)} ended - {{Guid}}", _guid);
         }
 
         private async Task AddMissingBasketsToFavorites(string[] currentlyFavoritedBaskets, string[] userFavoritedBaskets)
@@ -62,7 +62,7 @@ namespace TooGoodToGoNotifier.Jobs
 
             foreach (string basketId in basketsToAdd)
             {
-                _logger.LogInformation("Adding as favorite basket '{basketId}'", basketId);
+                //_logger.LogInformation("Adding as favorite basket '{basketId}'", basketId);
                 await _tooGoodToGoService.SetFavoriteAsync(_context.AccessToken, basketId, true);
                 await Task.Delay(_options.ThrottleInterval);
             }
@@ -76,7 +76,7 @@ namespace TooGoodToGoNotifier.Jobs
 
             foreach (string basketId in basketsToRemove)
             {
-                _logger.LogInformation("Removing from favorite basket '{basketId}'", basketId);
+                //_logger.LogInformation("Removing from favorite basket '{basketId}'", basketId);
                 await _tooGoodToGoService.SetFavoriteAsync(_context.AccessToken, basketId, false);
                 await Task.Delay(_options.ThrottleInterval);
             }
