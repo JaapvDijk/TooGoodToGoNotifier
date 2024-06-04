@@ -25,9 +25,9 @@ namespace TooGoodToGoNotifier.Helpers
         {
             var res = interval * (100 - (retryNr / speedUpAfterTries)) / 100;
 
-            if (res < 0.5)
+            if (res < 3)
             {
-                return 0.5;
+                return 0.1;
             }
 
             return res;
@@ -35,7 +35,7 @@ namespace TooGoodToGoNotifier.Helpers
 
         public async Task Start()
         {
-            const double retryWaitIntervalSeconds = 0.5;
+            const double retryWaitIntervalSeconds = 0.1;
             const short speedUpAfterTries = 5;
 
             var policy = Policy.Handle<Exception>()
@@ -43,7 +43,7 @@ namespace TooGoodToGoNotifier.Helpers
                                .WaitAndRetryForeverAsync(retryNr => TimeSpan.FromSeconds(retryWaitIntervalSeconds), //GetLimit(retryWaitIntervalSeconds, retryNr, speedUpAfterTries)
                                onRetry: (resp, retryNr, interval) => 
                                {
-                                   bool isSuccesResponse = resp.Exception != null && resp.Result != default;
+                                   bool isSuccesResponse = resp.Exception?.Message == null;
                                     if (isSuccesResponse)
                                    {
                                        if (retryNr % speedUpAfterTries == 0)
@@ -53,7 +53,7 @@ namespace TooGoodToGoNotifier.Helpers
                                    }
                                     else
                                     {
-                                        _logger.Error($"[Requset failed] interval, {interval}, retry count: {retryNr}, ex: {resp.Exception.Message}");
+                                        _logger.Error($"[Request failed] interval, {interval}, retry count: {retryNr}, ex: {resp.Exception?.Message}");
                                     }
                                });
 

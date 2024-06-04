@@ -23,34 +23,21 @@ namespace TooGoodToGoNotifier.Proxy
 
         public async Task<string> RequestAndThrowIfNotSuccessfulAsync(HttpRequestMessage httpRequestMessage)
         {
-            const string TGTG_APK_VERSION = "22.5.5"; //TODO: scrape version from: https://play.google.com/store/apps/details?id=com.app.tgtg&hl=en&gl=US
-            var userAgents = new List<string>()
-            {
-                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; U; Android 9; Nexus 5 Build/M4B30Z)",
-                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; U; Android 10; SM-G935F Build/NRD90M)",
-                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; Android 12; SM-G920V Build/MMB29K)",
-                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; U; Android 11; sdk_gphone_x86_arm Build/RSR1.201013.001)"
-            };
-
             var proxy = _proxyManager.GetNextProxy();
             using (var httpClient = CreateHttpClient(proxy))
             {
-                httpClient.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
-                httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-                httpClient.DefaultRequestHeaders.Add("User-Agent", userAgents[new Random().Next(userAgents.Count)]);
-
                 //try
                 //{
-                    var response = await httpClient.SendAsync(httpRequestMessage);
+                var response = await httpClient.SendAsync(httpRequestMessage);
+                
+                var httpResponseContent = await response.Content.ReadAsStringAsync();
 
-                    var httpResponseContent = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new TooGoodToGoRequestException("Error while requesting TooGoodToGo's services", response.StatusCode, httpResponseContent);
+                }
 
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new TooGoodToGoRequestException("Error while requesting TooGoodToGo's services", response.StatusCode, httpResponseContent);
-                    }
-
-                    return httpResponseContent;
+                return httpResponseContent;
                 //}
                 //catch (Exception ex)
                 //{
@@ -68,10 +55,39 @@ namespace TooGoodToGoNotifier.Proxy
                 UseProxy = false,
                 UseCookies = true,
                 CookieContainer = _cookieContainer,
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
             };
 
-            return new HttpClient(handler, disposeHandler: true);
+            var httpClient = new HttpClient(handler, disposeHandler: true);
+
+            const string TGTG_APK_VERSION = "22.5.5"; //TODO: scrape version from: https://play.google.com/store/apps/details?id=com.app.tgtg&hl=en&gl=US
+            var userAgents = new List<string>()
+            {
+                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; U; Android 9; Nexus 5 Build/M4B30Z)",
+                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; U; Android 10; SM-G935F Build/NRD90M)",
+                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; Android 12; SM-G920V Build/MMB29K)",
+                $"TGTG/{TGTG_APK_VERSION} Dalvik/2.1.0 (Linux; U; Android 11; sdk_gphone_x86_arm Build/RSR1.201013.001)"
+            };
+
+            httpClient.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            //httpClient.DefaultRequestHeaders.Add("content-type", "application/json; charset=utf-8");
+            //httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
+            //httpClient.DefaultRequestHeaders.Add("Accept-Language", "");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", userAgents[new Random().Next(userAgents.Count)]);
+            
+            if (handler.UseProxy)
+            {
+                string proxyAddress = proxy.Address.Host;
+                httpClient.DefaultRequestHeaders.Add("X-Originating-IP", proxyAddress);
+                httpClient.DefaultRequestHeaders.Add("X-Forwarded-For", proxyAddress);
+                httpClient.DefaultRequestHeaders.Add("X-Remote-IP", proxyAddress);
+                httpClient.DefaultRequestHeaders.Add("X-Client-IP", proxyAddress);
+                httpClient.DefaultRequestHeaders.Add("X-Host", proxyAddress);
+                httpClient.DefaultRequestHeaders.Add("X-Forwared-Host", proxyAddress);
+            }
+            
+            return httpClient;
         }
     }
 }
