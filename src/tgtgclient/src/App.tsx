@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Banner from './components/Banner';
 import { Container } from '@mui/material';
 import './App.css';
+import StoreDetails from './pages/StoreDetails';
 
 
 const theme = createTheme({
@@ -63,9 +64,9 @@ function App() {
                     } />
                 </Routes>
                 <Routes>
-                    <Route path="/shops" element={
+                    <Route path="/store/:id" element={
                         <Container maxWidth="lg" sx={{ padding: "0", textAlign: "center", minHeight: "500px" }}>
-                            <TestComp />
+                            <StoreDetails />
                         </Container>
                     } />
                 </Routes>

@@ -52,11 +52,11 @@ namespace TooGoodToGo.Api.Services
             var getFavoriteBasketsRequest = new GetBasketsRequest
             {
                 UserId = userId,
-                Origin = null, //new TgtgLocation { Latitude = 0, Longitude = 0 }
+                Origin = new TgtgLocation { Latitude = 0, Longitude = 0 },
                 Radius = 1,
                 Page = 1,
                 PageSize = 400, // Max page size allowed by TooGoodToGo API
-                FavoritesOnly = true,
+                FavoritesOnly = true, //true
                 WithStockOnly = false
             };
 

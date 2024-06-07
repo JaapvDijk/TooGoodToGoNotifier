@@ -15,5 +15,6 @@
         public bool FavoritesOnly { get; set; }
 
         public bool WithStockOnly { get; set; }
+        public string SearchPhrase { get; set; }
     }
 }

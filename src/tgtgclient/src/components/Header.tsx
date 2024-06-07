@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import AdbIcon from '@mui/icons-material/Adb';
 import { CircularProgress } from '@mui/material';
 import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
 
 const pages = ['Profile', 'Shops', 'Subscriptions'];
 
@@ -69,7 +70,7 @@ function ResponsiveAppBar() {
                         variant="h6"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
@@ -134,7 +135,9 @@ function ResponsiveAppBar() {
                             color: 'inherit',
                             textDecoration: 'none',
                         }}>
-                        LOGO
+                        <Link to='/'>
+                            LOGO
+                        </Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
@@ -142,7 +145,9 @@ function ResponsiveAppBar() {
                                 key={page}
                                 onClick={handleCloseNavMenu}
                                 sx={{ my: 2, color: 'white', display: 'block' }}>
-                                {page}
+                                <NavLink to={page}>
+                                    {page}
+                                </NavLink>
                             </Button>
                         ))}
                     </Box>
@@ -175,13 +180,13 @@ function ResponsiveAppBar() {
                                     onClose={handleCloseUserMenu}>
 
                                     <MenuItem key='Profile' onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">Profile</Typography>
+                                            <Typography textAlign="center" component="a" href="/profile">Profile</Typography>
                                     </MenuItem>
                                     <MenuItem key='Shops' onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">Shops</Typography>
+                                        <Typography textAlign="center" component="a" href="#stores">Stores</Typography>
                                     </MenuItem>
                                         <MenuItem key='Subscriptions' onClick={handleCloseUserMenu}>
-                                        <Typography textAlign="center">Subscriptions</Typography>
+                                        <Typography textAlign="center" component="a" href="/subscriptions">Subscriptions</Typography>
                                     </MenuItem>
                                         <MenuItem key='Logout' onClick={() => { handleCloseUserMenu(); logout(); }}>
                                         <Typography textAlign="center">Logout</Typography>

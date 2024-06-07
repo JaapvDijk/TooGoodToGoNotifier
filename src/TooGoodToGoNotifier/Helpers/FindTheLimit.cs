@@ -27,7 +27,7 @@ namespace TooGoodToGoNotifier.Helpers
 
             if (res < 3)
             {
-                return 0.1;
+                return 3;
             }
 
             return res;
@@ -35,7 +35,7 @@ namespace TooGoodToGoNotifier.Helpers
 
         public async Task Start()
         {
-            const double retryWaitIntervalSeconds = 0.1;
+            const double retryWaitIntervalSeconds = 3;
             const short speedUpAfterTries = 5;
 
             var policy = Policy.Handle<Exception>()
@@ -48,7 +48,7 @@ namespace TooGoodToGoNotifier.Helpers
                                    {
                                        if (retryNr % speedUpAfterTries == 0)
                                        {
-                                           _logger.Info($"[Request succes] interval, {interval}, retry count: {retryNr}, items: {resp.Result.Items}");
+                                           _logger.Info($"[Request succes] interval, {interval}, retry count: {retryNr}, nr items: {resp.Result.Items.Count}");
                                        }
                                    }
                                     else

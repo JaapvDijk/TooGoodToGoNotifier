@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import { store } from "../redux/store";
 import { Api } from "./Api";
 import { authThunks } from "../redux/auth";
-import { AccesJwtPayload } from "../types/accesJwtPayload";
+import { AccesJwtPayload } from "../types/tokens/accesJwtPayload";
 
 //Regen Api Client:
 //npx swagger-typescript-api -p http://localhost:5000/swagger/v1/swagger.json -o ./src/apiClient --modular

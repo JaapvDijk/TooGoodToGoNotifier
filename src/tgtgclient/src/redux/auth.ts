@@ -1,7 +1,7 @@
 ﻿import { PayloadAction, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { jwtDecode } from "jwt-decode";
-import { AccesJwtPayload } from "../types/accesJwtPayload";
+import { AccesJwtPayload } from "../types/tokens/accesJwtPayload";
 
 type SliceState = {
     token: string,
