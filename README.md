@@ -1,4 +1,6 @@
 # TooGoodToGoNotifier
+![image](https://github.com/user-attachments/assets/cb89c840-315a-4c92-8df5-5ee1c77c511c)
+![image](https://github.com/user-attachments/assets/5d5275a4-2088-4329-92ff-aed16e390f87)
 
 TooGoodToGoNotifier is a .NET 7 web api application that send email notifications when any of your or any of your friends favourite baskets are available in the TooGoodToGo mobile application. This project started when I saw the lack of notification functionality when a basket is available in the official application.
 The new README is in progress, please see the `console-version` branch to use the old version that was a simple console application without any database requirement and with a complete documentation.
